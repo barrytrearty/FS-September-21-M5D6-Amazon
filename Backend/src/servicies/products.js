@@ -57,6 +57,7 @@ productsRouter.post("/", productValidation, async (req, res, next) => {
     const newProduct = {
       id: uniqid(),
       ...req.body,
+     
       createdAt: new Date(),
     };
     const products = await getProducts();
