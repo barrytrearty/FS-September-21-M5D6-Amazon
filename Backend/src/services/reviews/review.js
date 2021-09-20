@@ -48,7 +48,11 @@ reviewsAmazn.put(
         const index = reviews.findIndex(
           (rew) => rew._id == req.params.comentId
         );
-        const updtReviews = { ...reviews[index], ...req.body };
+        const updtReviews = {
+          ...reviews[index],
+          ...req.body,
+          updatedAt: new Date(),
+        };
         reviews[index] = updtReviews;
         await writeReviews(reviews);
         res.send(["Success!", updtReviews]);
