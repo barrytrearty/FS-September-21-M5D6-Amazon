@@ -2,32 +2,19 @@
 import express from "express";
 import createHttpError from "http-errors";
 import uniqid from "uniqid";
+import { validationResult } from "express-validator"
 import { getProducts, writeProducts } from "./fs-tools.js";
+import { productValidation } from "./validation.js";
 
 const productsRouter = express.Router();
-productsRouter.get("/", async (req, res, next) => {
-  try {
-    const products = await getProducts();
-    res.send(products);
-  } catch (error) {
-    next(error);
-  }
-});
-
-productsRouter.get("/:id", async (req, res, next) => {
-  try {
-    const products = await getProducts();
-    const product = products.find((p) => p.id === req.params.id);
-    if (product) {
-      res.send(products);
-    } else {
-      next(createHttpError(404, `product with ID ${req.params.id} not found!`));
-    }
-  } catch (error) {
-    next(error);
-  }
-});
-
+// productsRouter.get("/", async (req, res, next) => {
+//   try {
+//     const products = await getProducts();
+//     res.send(products);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 // get by category 
 productsRouter.get("/", async (req, res, next) => {
     try {
@@ -43,11 +30,43 @@ productsRouter.get("/", async (req, res, next) => {
     }
   });
 
-productsRouter.post("/", async (req, res, next) => {
+productsRouter.get("/:id", async (req, res, next) => {
   try {
+    const products = await getProducts();
+    const product = products.find((p) => p.id == req.params.id);
+    console.log("product:", product)
+    console.log("products:", products)
+    if (product) {
+      res.send(product);
+    } else {
+      next(createHttpError(404, `product with ID ${req.params.id} not found!`));
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+// GET REVIEWS
+productsRouter.get("/:id/reviews", async (req, res, next) => {
+    try {
+      const reviews = await getReviews();
+      const filteredRev = reviews.filter((p) => p.productId === req.params.id);
+      res.send(filteredRev);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+productsRouter.post("/", productValidation, async (req, res, next) => {
+  const errorList = validationResult(req)
+  if (!errorList.isEmpty()){
+      next(createHttpError(400, (errorList)))
+  }
+    try {
     const newProduct = {
       id: uniqid(),
       ...req.body,
+     
       createdAt: new Date(),
     };
     const products = await getProducts();
@@ -64,8 +83,8 @@ productsRouter.put("/:id", async (req, res, next) => {
     const products = await getProducts();
     const index = products.findIndex(p => p.id === req.params.id)
     const productToModify = products[index]
-    const updatedProductBody = req.body
-    const updatedProduct = { ...productToModify, ...updatedProductBody}
+    const updatedProductBody = {...req.body }
+    const updatedProduct = { ...productToModify, ...updatedProductBody, updatedAt: new Date()}
     products[index] = updatedProduct
     await writeProducts(products)
     res.send(updatedProduct)
