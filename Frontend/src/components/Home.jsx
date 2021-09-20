@@ -29,7 +29,7 @@ const Home = () => {
       <Row>
         {productsArray.map((product) => (
           <Col md={4} style={{ marginBottom: 50 }}>
-            <Link to={`/product/${product._id}`}>
+            <Link to={`/product/${product.id}`}>
               <Card>
                 <Card.Img variant="top" src={product.imageUrl} />
                 <Card.Body>

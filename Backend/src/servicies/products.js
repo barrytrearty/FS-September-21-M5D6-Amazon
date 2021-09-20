@@ -5,6 +5,7 @@ import uniqid from "uniqid";
 import { validationResult } from "express-validator"
 import { getProducts, writeProducts } from "./fs-tools.js";
 import { productValidation } from "./validation.js";
+import { getReviews } from "../services/fs-tools.js";
 
 const productsRouter = express.Router();
 // productsRouter.get("/", async (req, res, next) => {

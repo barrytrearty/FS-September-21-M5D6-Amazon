@@ -18,16 +18,16 @@ const Product = ({ match }) => {
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState([]);
-  const [open, setOpen] = useState([]);
+  const [open, setOpen] = useState(false);
   const [file, setFile] = useState(null);
 
   const fetchProduct = async (id) => {
     try {
       let response = await fetch(`http://localhost:3003/products/${id}`);
       let productObj = await response.json();
-      setProduct(product);
+      setProduct(productObj);
+      console.log(productObj);
       setLoading(false);
-      return productObj;
     } catch (error) {
       console.log(error);
     }
@@ -57,12 +57,13 @@ const Product = ({ match }) => {
 
   const fetchReviews = async (id) => {
     try {
-      let response = await fetch(`http://localhost:3003/product/${id}/reviews`);
+      let response = await fetch(
+        `http://localhost:3003/products/${id}/reviews`
+      );
       let fetchedReviews = await response.json();
       setReviews(fetchedReviews);
       // setLoading(false);
-      console.log(fetchedReviews);
-      return fetchedReviews;
+      console.log("Reviews = ", fetchedReviews);
     } catch (error) {
       console.log(error);
     }
@@ -80,10 +81,11 @@ const Product = ({ match }) => {
           <Col className="col-9">
             <Image
               className="product-details-cover"
-              src={product.cover}
+              src={product.imageUrl}
               fluid
             />
-            <h1 className="product-details-title">{product.title}</h1>
+            <h1 className="product-details-title">{product.name}</h1>
+            <h4 className="product-details-title">{product.brand}</h4>
 
             <div className="product-details-container">
               <div className="product-details-author">{product.price}</div>
@@ -109,8 +111,10 @@ const Product = ({ match }) => {
                 <h4>Reviews</h4>
               </Card>
               {reviews.map((review) => (
-                <Card body key={review.userName}>
-                  <h5>{review.userName}</h5> {review.text}
+                <Card body key={review._id}>
+                  <h5>{review.comment}</h5>
+                  <small>{review.rate}</small>
+                  <small>{review.createdAt}</small>
                 </Card>
               ))}
               <Form>
