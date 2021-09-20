@@ -13,7 +13,7 @@ const NewProduct = () => {
 
   const createNewProduct = async () => {
     try {
-      let response = await fetch("http://localhost:3001/products", {
+      let response = await fetch("http://localhost:3003/products", {
         method: "POST",
         body: JSON.stringify(newProduct),
         headers: {

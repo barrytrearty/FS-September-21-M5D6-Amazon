@@ -9,7 +9,7 @@ const Home = () => {
 
   const fetchProducts = async () => {
     try {
-      let response = await fetch(`http://localhost:3001/products/`);
+      let response = await fetch(`http://localhost:3003/products/`);
       let products = await response.json();
       setProductsArray(products);
       setLoading(false);

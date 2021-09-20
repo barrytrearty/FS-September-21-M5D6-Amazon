@@ -23,7 +23,7 @@ const Product = ({ match }) => {
 
   const fetchProduct = async (id) => {
     try {
-      let response = await fetch(`http://localhost:3001/products/${id}`);
+      let response = await fetch(`http://localhost:3003/products/${id}`);
       let productObj = await response.json();
       setProduct(product);
       setLoading(false);
@@ -36,11 +36,11 @@ const Product = ({ match }) => {
   const submitForm = (e) => {
     e.preventDefault();
     const fileFormData = new FormData();
-    fileFormData.append("photoKey- whatever backend says", file);
+    fileFormData.append("photoKey", file);
     const uploadPhoto = async (id) => {
       try {
         let response = await fetch(
-          `http://localhost:3001/products/${id}/uploadPhoto`,
+          `http://localhost:3003/products/${id}/uploadPhoto`,
           {
             method: "PUT",
             body: fileFormData,
@@ -57,7 +57,7 @@ const Product = ({ match }) => {
 
   const fetchReviews = async (id) => {
     try {
-      let response = await fetch(`http://localhost:3001/product/${id}/reviews`);
+      let response = await fetch(`http://localhost:3003/product/${id}/reviews`);
       let fetchedReviews = await response.json();
       setReviews(fetchedReviews);
       // setLoading(false);

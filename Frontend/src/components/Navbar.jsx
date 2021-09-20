@@ -15,7 +15,7 @@ const NavBar = () => {
         <Link to="/products" style={{ marginRight: "2em" }}>
           Products
         </Link>
-        <Link to="/addproduct" style={{ marginRight: "2em" }}>
+        <Link to="/newproduct" style={{ marginRight: "2em" }}>
           Add a product
         </Link>
       </Nav>
