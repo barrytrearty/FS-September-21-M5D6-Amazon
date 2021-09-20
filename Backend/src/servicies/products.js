@@ -7,19 +7,35 @@ import { getProducts, writeProducts } from "./fs-tools.js";
 import { productValidation } from "./validation.js";
 
 const productsRouter = express.Router();
+// productsRouter.get("/", async (req, res, next) => {
+//   try {
+//     const products = await getProducts();
+//     res.send(products);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+// get by category 
 productsRouter.get("/", async (req, res, next) => {
-  try {
-    const products = await getProducts();
-    res.send(products);
-  } catch (error) {
-    next(error);
-  }
-});
-
+    try {
+      const products = await getProducts();
+      if (req.query && req.query.category){
+           const productsByCategory = products.find((p) => p.category === req.query.category);
+           res.send(productsByCategory)
+      } else {
+        res.send(products);
+      }
+    } catch (error) {
+      next(error);
+    }
+  });
+  
 productsRouter.get("/:id", async (req, res, next) => {
   try {
     const products = await getProducts();
-    const product = products.find((p) => p.id === req.params.id);
+    const product = products.find((p) => p.id == req.params.id);
+    console.log("product:", product)
+    console.log("products:", products)
     if (product) {
       res.send(product);
     } else {
@@ -30,20 +46,7 @@ productsRouter.get("/:id", async (req, res, next) => {
   }
 });
 
-// // get by category 
-// productsRouter.get("/", async (req, res, next) => {
-//     try {
-//       const products = await getProducts();
-//       if (req.query && req.query.category){
-//            const productsByCategory = products.find((p) => p.category === req.query.category);
-//            res.send(productsByCategory)
-//       } else {
-//         res.send(products);
-//       }
-//     } catch (error) {
-//       next(error);
-//     }
-//   });
+
 
 productsRouter.post("/", productValidation, async (req, res, next) => {
   const errorList = validationResult(req)
