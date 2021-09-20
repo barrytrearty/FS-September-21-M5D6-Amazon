@@ -7,6 +7,7 @@ import {
   Image,
   Form,
   Card,
+  Modal,
 } from "react-bootstrap";
 import { withRouter } from "react-router";
 
@@ -18,6 +19,7 @@ const Product = ({ match }) => {
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState([]);
   const [open, setOpen] = useState([]);
+  const [file, setFile] = useState(null);
 
   const fetchProduct = async (id) => {
     try {
@@ -31,21 +33,61 @@ const Product = ({ match }) => {
     }
   };
 
+  const submitForm = (e) => {
+    e.preventDefault();
+    const fileFormData = new FormData();
+    fileFormData.append("photoKey- whatever backend says", file);
+    const uploadPhoto = async (id) => {
+      try {
+        let response = await fetch(
+          `http://localhost:3001/products/${id}/uploadPhoto`,
+          {
+            method: "PUT",
+            body: fileFormData,
+          }
+        );
+        fetchProduct(id);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    uploadPhoto(id);
+    setOpen(false);
+  };
+
+  const fetchReviews = async (id) => {
+    try {
+      let response = await fetch(`http://localhost:3001/product/${id}/reviews`);
+      let fetchedReviews = await response.json();
+      setReviews(fetchedReviews);
+      // setLoading(false);
+      console.log(fetchedReviews);
+      return fetchedReviews;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    fetchProduct();
+    fetchProduct(id);
+    fetchReviews(id);
   }, []);
 
   return (
-    <div className="blog-details-root">
+    <div className="product-details-root">
       <Container>
         <Row>
           <Col className="col-9">
-            <Image className="blog-details-cover" src={product.cover} fluid />
-            <h1 className="blog-details-title">{product.title}</h1>
+            <Image
+              className="product-details-cover"
+              src={product.cover}
+              fluid
+            />
+            <h1 className="product-details-title">{product.title}</h1>
 
-            <div className="blog-details-container">
-              <div className="blog-details-author">{product.price}</div>
-              <div className="blog-details-info">
+            <div className="product-details-container">
+              <div className="product-details-author">{product.price}</div>
+              <div className="product-details-info">
                 <div>{product.createdAt}</div>
                 {/* <div>{`${product.readTime.value} ${product.readTime.unit} read`}</div> */}
               </div>
@@ -73,7 +115,7 @@ const Product = ({ match }) => {
               ))}
               <Form>
                 <Form.Group>
-                  <Form.Label>Leave a comment</Form.Label>
+                  <Form.Label>Leave a review</Form.Label>
                   <textarea
                     name="text"
                     id="text"
@@ -90,6 +132,51 @@ const Product = ({ match }) => {
             </div>
           </Col>
         </Row>
+
+        <Modal
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+          show={open}
+          animation={false}
+        >
+          <Modal.Header>
+            <Modal.Title>Upload Cover</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form onSubmit={submitForm}>
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlInput1"
+              >
+                <Form.Label>Choose</Form.Label>
+                <Form.Control
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    console.log(`Number 1 ${e.target}`);
+                    console.log(e.target.files);
+                    console.log(file);
+                    setFile(file);
+                  }}
+                  accept="image/*"
+                  type="file"
+                  placeholder="Photo"
+                  required
+                />
+              </Form.Group>
+              <Form.Group className="d-flex mt-3">
+                <Button
+                  type="submit"
+                  size="lg"
+                  variant="dark"
+                  style={{ marginLeft: "1em" }}
+                >
+                  Submit
+                </Button>
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+        </Modal>
       </Container>
     </div>
   );
