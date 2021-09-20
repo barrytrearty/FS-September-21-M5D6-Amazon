@@ -29,7 +29,7 @@ productsRouter.get("/", async (req, res, next) => {
       next(error);
     }
   });
-  
+
 productsRouter.get("/:id", async (req, res, next) => {
   try {
     const products = await getProducts();
@@ -46,7 +46,16 @@ productsRouter.get("/:id", async (req, res, next) => {
   }
 });
 
-
+// GET REVIEWS
+productsRouter.get("/:id/reviews", async (req, res, next) => {
+    try {
+      const reviews = await getReviews();
+      const filteredRev = reviews.filter((p) => p.productId === req.params.id);
+      res.send(filteredRev);
+    } catch (error) {
+      next(error);
+    }
+  });
 
 productsRouter.post("/", productValidation, async (req, res, next) => {
   const errorList = validationResult(req)
