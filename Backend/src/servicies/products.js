@@ -2,9 +2,11 @@
 import express from "express";
 import createHttpError from "http-errors";
 import uniqid from "uniqid";
+import multer from "multer"
 import { validationResult } from "express-validator"
-import { getProducts, writeProducts } from "./fs-tools.js";
+import { getProducts, savePhoto, writeProducts } from "./fs-tools.js";
 import { productValidation } from "./validation.js";
+import { write } from "fs-extra";
 
 const productsRouter = express.Router();
 // productsRouter.get("/", async (req, res, next) => {
@@ -34,8 +36,7 @@ productsRouter.get("/:id", async (req, res, next) => {
   try {
     const products = await getProducts();
     const product = products.find((p) => p.id == req.params.id);
-    console.log("product:", product)
-    console.log("products:", products)
+
     if (product) {
       res.send(product);
     } else {
@@ -105,4 +106,32 @@ productsRouter.delete("/:id", async (req, res, next) => {
     next(error);
   }
 });
-export default productsRouter;
+
+//upload photo
+productsRouter.post("/:id/uploadPhoto", multer({
+    fileFilter: (req, file, cb) => {
+            if (file.mimetype != "image/jpeg" && file.mimetype != "image/png"  && file.mimetype != "image/jpg")
+              cb(createHttpError(400, "Format not suported!"), false);
+               else cb(null, true);}
+       }).single("photoKey"),
+ async (req, res, next) => {
+    try {
+        // await savePhoto("photoKey", req.file.buffer)
+        let nameOfPhoto = `${req.params.query}`;
+        await savePhoto(nameOfPhoto, req.file.buffer)
+        const products = await getProducts();
+        const index = products.findIndex((p) => p.id == req.params.id);
+        const updatedProduct = {
+            ...products[index],
+            imageUrl: nameOfPhoto,
+          };
+          products[index] = updatedProduct
+          await writeProducts(updatedProduct)
+        res.send(updatedProduct)
+    } catch (error) {
+        next(error);
+    }
+}
+)
+
+ export default productsRouter;

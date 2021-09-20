@@ -1,7 +1,7 @@
 import express from "express";
-import listEndpoints from "express-list-endpoints"
 import cors from "cors"
 import productsRouter from "./servicies/products.js";
+import { join } from "path"
 
 const server = express();
 const port = 3003;
@@ -14,7 +14,8 @@ const loggerMiddleware = (req, res, next) => {
 server.use(loggerMiddleware);
 server.use(cors())
 server.use(express.json())
-
+const publicFolderPath = join(process.cwd(), "../../public/img")
+server.use(express.static(publicFolderPath))
 
 server.use("/products", productsRouter);
 server.listen(port, () => {
