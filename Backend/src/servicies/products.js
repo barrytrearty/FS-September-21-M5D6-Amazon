@@ -107,7 +107,7 @@ productsRouter.delete("/:id", async (req, res, next) => {
   }
 });
 
-//upload photo
+// upload photo
 productsRouter.post("/:id/uploadPhoto", multer({
     fileFilter: (req, file, cb) => {
             if (file.mimetype != "image/jpeg" && file.mimetype != "image/png"  && file.mimetype != "image/jpg")
@@ -118,7 +118,7 @@ productsRouter.post("/:id/uploadPhoto", multer({
     try {
         // await savePhoto("photoKey", req.file.buffer)
         let nameOfPhoto = `${req.params.query}`;
-        await savePhoto(nameOfPhoto, req.file.buffer)
+        await savePhoto("photoKey", req.file.buffer)
         const products = await getProducts();
         const index = products.findIndex((p) => p.id == req.params.id);
         const updatedProduct = {
