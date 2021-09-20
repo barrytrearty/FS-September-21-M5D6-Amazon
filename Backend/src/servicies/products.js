@@ -117,8 +117,8 @@ productsRouter.post("/:id/uploadPhoto", multer({
  async (req, res, next) => {
     try {
         // await savePhoto("photoKey", req.file.buffer)
-        let nameOfPhoto = `${req.params.query}`;
-        await savePhoto("photoKey", req.file.buffer)
+        // let nameOfPhoto = `${req.params.query}`;
+        await savePhoto( req.file.originalname, req.file.buffer)
         const products = await getProducts();
         const index = products.findIndex((p) => p.id == req.params.id);
         const updatedProduct = {
