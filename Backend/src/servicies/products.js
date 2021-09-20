@@ -28,6 +28,21 @@ productsRouter.get("/:id", async (req, res, next) => {
   }
 });
 
+// get by category 
+productsRouter.get("/", async (req, res, next) => {
+    try {
+      const products = await getProducts();
+      if (req.query && req.query.category){
+           const productsByCategory = products.find((p) => p.category === req.query.category);
+           res.send(productsByCategory)
+      } else {
+        res.send(products);
+      }
+    } catch (error) {
+      next(error);
+    }
+  });
+
 productsRouter.post("/", async (req, res, next) => {
   try {
     const newProduct = {
