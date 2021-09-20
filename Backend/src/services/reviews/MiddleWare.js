@@ -5,7 +5,6 @@ import { getReviews } from "../fs-tools.js";
 export const reviewIdCheck = async (req, res, next) => {
   const reviews = await getReviews();
   const check = reviews.some((rev) => rev._id == req.params.comentId);
-
   if (check) {
     next();
   } else {
@@ -22,6 +21,6 @@ export const postValidation = [
   body("rate")
     .exists()
     .notEmpty()
-    .isNumeric()
-    .withMessage("Rate is a mandatory field!"),
+    .isFloat({ min: 0, max: 5 })
+    .withMessage("Rate is a mandatory field! (Max: 5, min: 0)"),
 ];

@@ -4,6 +4,7 @@ import { join } from "path";
 import listEndpoints from "express-list-endpoints";
 import reviewsAmazn from "./services/reviews/review.js";
 import { genericErrHandl, customErrHand } from "./errorHandlers.js";
+import productsImg from "./services/reviews/postImg.js";
 // === Server ===
 const server = express();
 const port = 3003;
@@ -16,6 +17,7 @@ server.use(express.json());
 
 // ==== ROUTES / ENDPOINTS ====
 server.use("/reviews", reviewsAmazn);
+server.use("/products", productsImg);
 // ERROR MIDDLEWARE
 server.use(customErrHand);
 server.use(genericErrHandl);

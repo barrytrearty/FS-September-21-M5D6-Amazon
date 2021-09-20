@@ -20,7 +20,7 @@ reviewsAmazn.get("/", async (req, res, next) => {
 reviewsAmazn.post("/", postValidation, async (req, res, next) => {
   const errorList = validationResult(req);
   if (!errorList.isEmpty()) {
-    next(createHttpError(400, { errorList }));
+    next(createHttpError(400, errorList.errors[0].msg));
   } else {
     try {
       const reviews = await getReviews();
