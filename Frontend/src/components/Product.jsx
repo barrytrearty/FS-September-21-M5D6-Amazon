@@ -26,7 +26,6 @@ const Product = ({ match }) => {
       let response = await fetch(`http://localhost:3003/products/${id}`);
       let productObj = await response.json();
       setProduct(productObj);
-      console.log(productObj);
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -63,7 +62,6 @@ const Product = ({ match }) => {
       let fetchedReviews = await response.json();
       setReviews(fetchedReviews);
       // setLoading(false);
-      console.log("Reviews = ", fetchedReviews);
     } catch (error) {
       console.log(error);
     }
@@ -88,7 +86,7 @@ const Product = ({ match }) => {
             <h4 className="product-details-title">{product.brand}</h4>
 
             <div className="product-details-container">
-              <div className="product-details-author">{product.price}</div>
+              <div className="product-details-author">Price: £{product.price}</div>
               <div className="product-details-info">
                 <div>{product.createdAt}</div>
                 {/* <div>{`${product.readTime.value} ${product.readTime.unit} read`}</div> */}
