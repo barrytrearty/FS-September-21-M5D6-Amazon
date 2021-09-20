@@ -10,6 +10,7 @@ import {
   Modal,
 } from "react-bootstrap";
 import { withRouter } from "react-router";
+// import uniqid from "uniqid";
 
 const Product = ({ match }) => {
   const { id } = match.params;
@@ -17,7 +18,11 @@ const Product = ({ match }) => {
   const [product, setProduct] = useState([]);
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState([]);
-  const [newReview, setNewReview] = useState([]);
+  const [newReview, setNewReview] = useState({
+    comment: "",
+    rate: "",
+    productId: id,
+  });
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState(null);
 
@@ -67,10 +72,33 @@ const Product = ({ match }) => {
     }
   };
 
+  const postNewReview = async (e, id) => {
+    e.preventDefault(e);
+    console.log(newReview);
+    try {
+      let response = await fetch(`http://localhost:3003/reviews`, {
+        method: "POST",
+        body: JSON.stringify(newReview),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        console.log(response.json());
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchProduct(id);
     fetchReviews(id);
   }, []);
+
+  // useEffect(() => {
+  //   fetchProduct(id);
+  // }, [open]);
 
   return (
     <div className="product-details-root">
@@ -117,20 +145,40 @@ const Product = ({ match }) => {
                   <small>{review.createdAt}</small>
                 </Card>
               ))}
-              <Form>
+              <Form onSubmit={postNewReview}>
                 <Form.Group>
                   <Form.Label>Leave a review</Form.Label>
-                  <textarea
-                    name="text"
-                    id="text"
-                    cols="auto"
-                    rows="2"
-                  ></textarea>
+
                   <Form.Control
                     size="auto"
-                    placeholder="Title"
-                    onChange={(e) => setNewReview({ title: e.target.value })}
+                    as="select"
+                    onChange={(e) =>
+                      setNewReview({ ...newReview, rate: e.target.value })
+                    }
+                  >
+                    <option value={1}>1</option>
+                    <option value={2}>2</option>
+                    <option value={3}>3</option>
+                    <option value={4}>4</option>
+                    <option value={5}>5</option>
+                  </Form.Control>
+                  <Form.Control
+                    size="auto"
+                    placeholder="Comment"
+                    onChange={(e) =>
+                      setNewReview({ ...newReview, comment: e.target.value })
+                    }
                   />
+                  <Form.Group className="d-flex mt-3">
+                    <Button
+                      type="submit"
+                      size="lg"
+                      variant="dark"
+                      style={{ marginLeft: "1em" }}
+                    >
+                      Submit Review
+                    </Button>
+                  </Form.Group>
                 </Form.Group>
               </Form>
             </div>
@@ -145,7 +193,7 @@ const Product = ({ match }) => {
           animation={false}
         >
           <Modal.Header>
-            <Modal.Title>Upload Cover</Modal.Title>
+            <Modal.Title>Upload Image</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={submitForm}>

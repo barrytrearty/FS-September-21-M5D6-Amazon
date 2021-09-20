@@ -7,7 +7,6 @@ import { validationResult } from "express-validator";
 import { join, extname } from "path";
 import {
   getProducts,
-  uploadFile,
   writeProducts,
   publicPathFolder,
 } from "./fs-tools.js";
