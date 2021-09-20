@@ -2,10 +2,9 @@ import { body } from "express-validator";
 import createHttpError from "http-errors";
 import { getReviews } from "../fs-tools.js";
 
-export const reviewIdCheck = (req, res, next) => {
-  const reviews = getReviews();
+export const reviewIdCheck = async (req, res, next) => {
+  const reviews = await getReviews();
   const check = reviews.some((rev) => rev._id == req.params.comentId);
-  console.log(req.params.comentId);
 
   if (check) {
     next();

@@ -56,16 +56,14 @@ reviewsAmazn.put(
   }
 );
 //  === DELETE
-reviewsAmazn.delete("/:comentId", async (req, res, next) => {
+reviewsAmazn.delete("/:comentId", reviewIdCheck, async (req, res, next) => {
   try {
     const reviews = await getReviews();
-    console.log(req.params.comentId);
-    console.log(reviews);
-
-    let filteredRev = reviews.filter((rev = rev._id != req.params.comentId));
-    console.log(filteredRev);
-
-    await writeReviews(filteredRev);
+    console.log(1);
+    let postFiltered = reviews.filter(
+      (revw) => revw._id != req.params.comentId
+    );
+    await writeReviews(postFiltered);
     res.status(200).send("OK");
   } catch (err) {
     next(createHttpError(500, ""));
