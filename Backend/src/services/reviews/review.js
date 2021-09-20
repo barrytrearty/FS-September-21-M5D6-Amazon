@@ -45,10 +45,13 @@ reviewsAmazn.put(
     } else {
       try {
         const reviews = await getReviews();
-        let newReview = { ...req.body, _id: uniqid(), createdAt: new Date() };
-        reviews.push(newReview);
+        const index = reviews.findIndex(
+          (rew) => rew._id == req.params.comentId
+        );
+        const updtReviews = { ...reviews[index], ...req.body };
+        reviews[index] = updtReviews;
         await writeReviews(reviews);
-        res.send(["Success!", newReview]);
+        res.send(["Success!", updtReviews]);
       } catch (err) {
         next(createHttpError(401, "Bad request"));
       }
@@ -59,7 +62,6 @@ reviewsAmazn.put(
 reviewsAmazn.delete("/:comentId", reviewIdCheck, async (req, res, next) => {
   try {
     const reviews = await getReviews();
-    console.log(1);
     let postFiltered = reviews.filter(
       (revw) => revw._id != req.params.comentId
     );
