@@ -4,7 +4,7 @@ import cors from "cors"
 import productsRouter from "./servicies/products.js";
 
 const server = express();
-const port = 3001;
+const port = 3003;
 
 const loggerMiddleware = (req, res, next) => {
   console.log(`Request method ${req.method} -- Request URL ${req.url}`);
