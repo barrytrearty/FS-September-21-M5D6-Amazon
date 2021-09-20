@@ -35,17 +35,17 @@ const Product = ({ match }) => {
   const submitForm = (e) => {
     e.preventDefault();
     const fileFormData = new FormData();
-    fileFormData.append("photoKey", file);
+    fileFormData.append("image", file);
     const uploadPhoto = async (id) => {
       try {
         let response = await fetch(
-          `http://localhost:3003/products/${id}/uploadPhoto`,
+          `http://localhost:3003/products/${id}/uploadimage`,
           {
             method: "PUT",
             body: fileFormData,
           }
         );
-        fetchProduct(id);
+        console.log(response);
       } catch (error) {
         console.log(error);
       }
@@ -86,7 +86,9 @@ const Product = ({ match }) => {
             <h4 className="product-details-title">{product.brand}</h4>
 
             <div className="product-details-container">
-              <div className="product-details-author">Price: £{product.price}</div>
+              <div className="product-details-author">
+                Price: £{product.price}
+              </div>
               <div className="product-details-info">
                 <div>{product.createdAt}</div>
                 {/* <div>{`${product.readTime.value} ${product.readTime.unit} read`}</div> */}
