@@ -175,10 +175,9 @@ productsRouter.post(
       }`;
       let urlPhoto = `http://localhost:3003/${nameOfPhoto}`;
       await savePhoto(nameOfPhoto, req.file.buffer);
-
+      // products
       const products = await getProducts();
       const index = products.findIndex((p) => p.id == req.params.id);
-
       const updatedProduct = {
         ...products[index],
         imageUrl: urlPhoto,
