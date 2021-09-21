@@ -116,22 +116,26 @@ productsRouter.post("/:id/uploadPhoto", multer({
        }).single("photoKey"),
  async (req, res, next) => {
     try {
-        // await savePhoto("photoKey", req.file.buffer)
-        // let nameOfPhoto = `${req.params.query}`;
-        await savePhoto( req.file.originalname, req.file.buffer)
+    
+         let nameOfPhoto = `${req.params.id}.${req.file.originalname.split(".").reverse()[0]}`;
+         let urlPhoto = `http://localhost:3003/${nameOfPhoto}`
+        await savePhoto(nameOfPhoto, req.file.buffer)
         const products = await getProducts();
+        console.log("products:", products)
         const index = products.findIndex((p) => p.id == req.params.id);
         const updatedProduct = {
             ...products[index],
-            imageUrl: nameOfPhoto,
+            imageUrl:urlPhoto,
           };
           products[index] = updatedProduct
-          await writeProducts(updatedProduct)
+          products.push(updatedProduct)
+          await writeProducts(products)
         res.send(updatedProduct)
     } catch (error) {
         next(error);
     }
 }
 )
+
 
  export default productsRouter;
