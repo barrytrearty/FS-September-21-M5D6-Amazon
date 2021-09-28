@@ -15,22 +15,22 @@
     "name": "Car",
     "description": "1080p",
     "brand": "Kohler - Hoppe",
-    "imageUrl": "http://localhost:3003/1intdt0ktsemzfb.webp",
+    "imageUrl": "http://localhost:3003/1intdt0ktsemzfb.png",
     "price": 100,
     "category": "sky blue",
     "createdAt": "2021-09-20T08:46:49.559Z",
-    "updatedAt": "2021-09-20T14:06:06.637Z"
+    "updatedAt": "2021-09-20T15:24:02.842Z"
   },
   {
     "id": "1int5k0ktsepm6f",
     "name": "Car",
     "description": "Somalia",
     "brand": "O'Kon Inc",
-    "imageUrl": "http://localhost:3003/1int5k0ktsepm6f.jpg",
+    "imageUrl": "http://localhost:3003/1int5k0ktsepm6f.jpeg",
     "price": 100,
     "category": "mint green",
     "createdAt": "2021-09-20T08:48:52.358Z",
-    "updatedAt": "2021-09-20T14:11:08.461Z"
+    "updatedAt": "2021-09-20T15:25:38.329Z"
   },
   {
     "id": "1int5k0ktsepn6b",
@@ -108,7 +108,7 @@
     "name": "Chips",
     "description": "1080p",
     "brand": "Leuschke - Baumbach",
-    "imageUrl": "/sbin/money_jersey_mandatory.pskcxml",
+    "imageUrl": "http://localhost:3003/1int5k0ktseppow.png",
     "price": 100,
     "category": "fuchsia",
     "createdAt": "2021-09-20T08:48:56.912Z"

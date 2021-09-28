@@ -84,7 +84,7 @@ const Product = ({ match }) => {
         },
       });
       if (response.ok) {
-        console.log(response.json());
+        console.log(await response.json());
       }
     } catch (error) {
       console.log(error);
