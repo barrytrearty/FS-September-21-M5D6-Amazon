@@ -31,17 +31,21 @@ productsRouter.get("/", async (req, res, next) => {
 
 productsRouter.get("/:id", async (req, res, next) => {
   try {
-    const query = `SELECT * FROM products WHERE id = ${req.params.id}`;
-    const result = await pool.query(query);
-    if (result.rows.length > 0) {
-      console.log(result.rows[0]);
-      res.send(result.rows[0]);
+    const productQuery = `SELECT * FROM products WHERE id = ${req.params.id}`;
+    const productResult = await pool.query(productQuery);
+    if (productResult.rows.length > 0) {
+      const product = productResult.rows[0];
+      const reviewsQuery = `SELECT * FROM reviews WHERE product_id=${req.params.id}`;
+      const reviewsResult = await pool.query(reviewsQuery);
+      const reviews = reviewsResult.rows;
+      res.send({ product, reviews });
     } else {
       res
         .status(404)
         .send({ message: `Product- ${req.params.id} is not found` });
     }
   } catch (error) {
+    console.log(error);
     next(error);
   }
 });
