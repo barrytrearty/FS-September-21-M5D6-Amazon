@@ -1,5 +1,5 @@
 import express from "express";
-import { getReviews, writeReviews } from "../fs-tools.js";
+import { getReviews, writeReviews } from "./fs-tools.js";
 import createHttpError from "http-errors";
 import uniqid from "uniqid";
 import { postValidation, reviewIdCheck } from "./MiddleWare.js";

@@ -2,32 +2,38 @@ import express from "express";
 import cors from "cors";
 import { join } from "path";
 import listEndpoints from "express-list-endpoints";
-import reviewsAmazn from "./services/reviews/review.js";
-import productsRouter from "./servicies/products.js";
+import reviewsAmazon from "./reviews/review.js";
+import productsRouter from "./products/products.js";
 import { genericErrHandl, customErrHand } from "./errorHandlers.js";
+import pool from "./utils/db.js";
+import createTables from "./utils/create-table.js";
+import { create } from "domain";
+
 // === Server ===
-const loggerMiddleware = (req, res, next) => {
-  console.log(`Request method ${req.method} -- Request URL ${req.url}`);
-  next();
-};
+
 const server = express();
 const port = 3003;
 const publicFolderPath = join(process.cwd(), "public");
 // === COnfiguration | Before endpoints! ===
-server.use(loggerMiddleware);
+
 server.use(express.static(publicFolderPath));
 // body converter
-server.use(cors());
+// server.use(cors());
 server.use(express.json());
 
 // ==== ROUTES / ENDPOINTS ====
 server.use("/products", productsRouter);
-server.use("/reviews", reviewsAmazn);
+server.use("/reviews", reviewsAmazon);
+
 // ERROR MIDDLEWARE
 server.use(customErrHand);
 server.use(genericErrHandl);
 // Listen
-server.listen(port, () => {
+server.listen(port, async () => {
   console.log(port);
+  // console.log(process.env.PGPASSWORD);
+  // const result = await pool.query("SELECT NOW()");
+  // console.log(result);
+  await createTables();
 });
 console.table(listEndpoints(server));

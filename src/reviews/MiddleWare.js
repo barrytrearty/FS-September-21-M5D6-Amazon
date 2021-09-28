@@ -1,6 +1,6 @@
 import { body } from "express-validator";
 import createHttpError from "http-errors";
-import { getReviews } from "../fs-tools.js";
+import { getReviews } from "./fs-tools.js";
 
 export const reviewIdCheck = async (req, res, next) => {
   const reviews = await getReviews();
