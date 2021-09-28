@@ -15,8 +15,17 @@ import { productValidation } from "./validation.js";
 import { getReviews } from "../reviews/fs-tools.js";
 import fs from "fs-extra";
 import pool from "../utils/db.js";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 const productsRouter = express.Router();
+
+const cloudinaryStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "products",
+  },
+});
 
 productsRouter.get("/", async (req, res, next) => {
   try {
@@ -109,5 +118,32 @@ productsRouter.delete("/:id", async (req, res, next) => {
     res.status(500).send(error);
   }
 });
+
+productsRouter.put(
+  "/:id/cloudinaryUpload",
+  multer({ storage: cloudinaryStorage }).single("image"),
+  async (req, res, next) => {
+    try {
+      const query = `SELECT * FROM products`;
+      const queryResults = await pool.query(query);
+      const products = queryResults.rows;
+      console.log(products);
+      const index = products.findIndex(
+        (prod) => prod.id === parseInt(req.params.id)
+      );
+      console.log(`INDEX: ${index}`);
+      let prodToBeAltered = products[index];
+      console.log(prodToBeAltered);
+      console.log(req.file.path);
+      const newImage = { image_url: req.file.path };
+      const updatedProd = { ...prodToBeAltered, ...newImage };
+      products[index] = updatedProd;
+      res.send(updatedProd);
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+);
 
 export default productsRouter;
