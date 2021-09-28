@@ -5,26 +5,14 @@ import multer from "multer";
 import uniqid from "uniqid";
 import { validationResult } from "express-validator";
 import { join, extname } from "path";
-import {
-  getProducts,
-  writeProducts,
-  publicPathFolder,
-} from "./fs-tools.js";
+import { getProducts, writeProducts, publicPathFolder } from "./fs-tools.js";
 import { productValidation } from "./validation.js";
 import { getReviews } from "../services/fs-tools.js";
 import fs from "fs-extra";
 // import { uploadFile } from "./fs-tools.js";
 
 const productsRouter = express.Router();
-// productsRouter.get("/", async (req, res, next) => {
-//   try {
-//     const products = await getProducts();
-//     res.send(products);
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-// get by category
+
 productsRouter.get("/", async (req, res, next) => {
   try {
     const products = await getProducts();
@@ -117,9 +105,6 @@ productsRouter.put(
       const { originalname, buffer } = req.file;
       const extension = extname(originalname);
       const fileName = `${req.params.id}${extension}`;
-      console.log(`originalname: ${originalname}`);
-      console.log(`fileName: ${fileName}`);
-
       await fs.writeFile(join(publicPathFolder, fileName), buffer);
 
       const products = await getProducts();
