@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import { join } from "path";
 import listEndpoints from "express-list-endpoints";
-import reviewsAmazon from "./reviews/review.js";
+import reviewsRouter from "./reviews/review.js";
 import productsRouter from "./products/products.js";
 import { genericErrHandl, customErrHand } from "./errorHandlers.js";
 import pool from "./utils/db.js";
@@ -23,7 +23,7 @@ server.use(express.json());
 
 // ==== ROUTES / ENDPOINTS ====
 server.use("/products", productsRouter);
-server.use("/reviews", reviewsAmazon);
+server.use("/reviews", reviewsRouter);
 
 // ERROR MIDDLEWARE
 server.use(customErrHand);
