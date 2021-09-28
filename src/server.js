@@ -12,7 +12,7 @@ import { create } from "domain";
 // === Server ===
 
 const server = express();
-const port = 3003;
+const port = process.env.PORT || 3003;
 const publicFolderPath = join(process.cwd(), "public");
 // === COnfiguration | Before endpoints! ===
 
