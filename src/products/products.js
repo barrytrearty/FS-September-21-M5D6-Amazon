@@ -135,9 +135,10 @@ productsRouter.put(
       let prodToBeAltered = products[index];
       console.log(prodToBeAltered);
       console.log(req.file.path);
+      console.log(`INDEXNOW: ${products[index].id}`);
       const newImage = { image_url: req.file.path };
       const updatedProd = { ...prodToBeAltered, ...newImage };
-      products[index] = updatedProd;
+      products[index] = { ...updatedProd };
       res.send(updatedProd);
     } catch (error) {
       console.log(error);
@@ -145,5 +146,7 @@ productsRouter.put(
     }
   }
 );
+
+//Fix image upload using get product by id and update
 
 export default productsRouter;
